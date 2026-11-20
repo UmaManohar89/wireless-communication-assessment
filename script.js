@@ -1,5 +1,5 @@
 // Paste your deployed Apps Script Web App URL here (it is not a secret).
-const API_URL = "";
+const API_URL = "https://script.google.com/macros/s/AKfycbxks8enw8aRuHnaftTzqrhUV_BzcWeaJON2j1RiMn8i6AAZHhV4C0ngeegShVCPu3OH/exec";
 const MINUTES = 20;
 const SUBJECT = "Wireless Communication / Internet of Things";
 const TOPIC = "Components of a Wireless Communication System";
