@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Components of a Wireless Communication System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>Components of a Wireless Communication System</h1>
+  <p>Wireless Communication / Internet of Things</p>
+  <nav aria-label="Main">
+    <button data-v="register">Register</button>
+    <button data-v="learn">Learn</button>
+    <button data-v="practice">Practice</button>
+    <button data-v="assess">Assessment</button>
+    <button data-v="result">Result</button>
+  </nav>
+</header>
+<main>
+<section id="register">
+  <h2>Student registration</h2>
+  <p>Register before you start the assessment. Learning and practice are open to everyone.</p>
+  <form id="regForm" class="card">
+    <label>Student name <input name="name" required maxlength="80" autocomplete="name"></label>
+    <label>Register number <input name="reg" required maxlength="30" pattern="[A-Za-z0-9\-\/]+" title="Letters, digits, - or /"></label>
+    <label>Department <input name="dept" required maxlength="60"></label>
+    <label>Year / Section <input name="year" required maxlength="20" placeholder="e.g. II / A"></label>
+    <button class="primary">Save and continue</button>
+    <p id="regMsg" role="status"></p>
+  </form>
+</section>
+
+<section id="learn" hidden>
+  <h2>Learn the six components</h2>
+  <svg viewBox="0 0 720 150" role="img" aria-label="Block diagram: information source to transmitter to transmit antenna, over the air to receive antenna, receiver, destination" class="diagram">
+    <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="#1b5fc1"/></marker></defs>
+    <g font-size="13" text-anchor="middle" fill="#12263f">
+      <rect x="5" y="20" width="100" height="44" rx="6" class="b0"/><text x="55" y="47">Source</text>
+      <rect x="135" y="20" width="110" height="44" rx="6" class="b1"/><text x="190" y="47">Transmitter</text>
+      <rect x="275" y="20" width="100" height="44" rx="6" class="b1"/><text x="325" y="47">Tx Antenna</text>
+      <rect x="405" y="20" width="100" height="44" rx="6" class="b1"/><text x="455" y="47">Rx Antenna</text>
+      <rect x="535" y="20" width="90" height="44" rx="6" class="b1"/><text x="580" y="47">Receiver</text>
+      <rect x="650" y="20" width="65" height="44" rx="6" class="b0"/><text x="682" y="47">Sink</text>
+      <rect x="135" y="90" width="110" height="40" rx="6" class="b2"/><text x="190" y="115">Mixer · Amp · Filter</text>
+      <rect x="520" y="90" width="120" height="40" rx="6" class="b2"/><text x="580" y="115">Filter · Amp · Mixer</text>
+    </g>
+    <g stroke="#1b5fc1" stroke-width="2" marker-end="url(#ar)"><line x1="105" y1="42" x2="133" y2="42"/><line x1="245" y1="42" x2="273" y2="42"/><line x1="375" y1="42" x2="403" y2="42" stroke-dasharray="5 4"/><line x1="505" y1="42" x2="533" y2="42"/><line x1="625" y1="42" x2="648" y2="42"/></g>
+  </svg>
+  <div id="learnCards"></div>
+</section>
+
+<section id="practice" hidden>
+  <h2>Practice activities</h2>
+  <div class="tabs" role="tablist" id="actTabs"></div>
+  <div id="actBody" class="card"></div>
+</section>
+
+<section id="assess" hidden>
+  <h2>Assessment</h2>
+  <div id="assessIntro" class="card">
+    <p>25 marks in total: 10 MCQs (10), 5 match-the-following (5) and 5 situation-based questions (10). You have 20 minutes, and you can attempt it once.</p>
+    <button class="primary" id="startBtn">Start assessment</button>
+    <p id="startMsg" role="status"></p>
+  </div>
+  <div id="quiz" hidden>
+    <div class="sticky"><span id="clock" aria-live="off">20:00</span><div class="bar"><i id="prog"></i></div></div>
+    <div id="qList"></div>
+    <button class="primary" id="submitBtn">Submit assessment</button>
+    <p id="subMsg" role="status"></p>
+  </div>
+</section>
+
+<section id="result" hidden>
+  <h2>Result</h2>
+  <div id="resBody" class="card"><p>Complete the assessment to see your result.</p></div>
+</section>
+</main>
+<footer>Teachers: results and the dashboard are in the linked Google Sheet (access is controlled by Google sharing).</footer>
+<script src="questions.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
