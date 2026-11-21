@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ML Quest – Machine Learning Game</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#2b1b5e;--bg2:#3d2a7d;--card:#fff8ec;--ink:#2b1b5e;--pink:#ff4d8d;--yel:#ffd23f;--mint:#2ee6a6;--sky:#3fa7ff;--bad:#ff5c5c;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;font-family:'Fredoka','Trebuchet MS',system-ui,sans-serif;background:var(--bg);background-image:radial-gradient(circle at 15% 10%,#ff4d8d33 0,transparent 35%),radial-gradient(circle at 85% 30%,#3fa7ff33 0,transparent 35%),radial-gradient(circle at 50% 95%,#2ee6a633 0,transparent 40%);color:var(--ink);min-height:100vh}
+#app{max-width:860px;margin:0 auto;padding:14px}
+nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:14px}
+nav button{font:inherit;font-weight:600;border:3px solid var(--ink);background:#fff;color:var(--ink);padding:8px 14px;border-radius:999px;cursor:pointer;box-shadow:0 4px 0 var(--ink)}
+nav button.on{background:var(--yel)}
+nav button:disabled{opacity:.45;cursor:not-allowed}
+.card{background:var(--card);border:4px solid var(--ink);border-radius:26px;padding:22px;box-shadow:0 8px 0 #0004}
+h1{font-size:clamp(2.2rem,8vw,3.6rem);line-height:1;margin:.2em 0;color:var(--pink);text-shadow:3px 3px 0 var(--ink)}
+h2{margin:.2em 0 .5em;font-size:1.7rem}h3{margin:.8em 0 .3em;color:var(--pink)}
+.btn{font:inherit;font-weight:700;font-size:1.1rem;border:3px solid var(--ink);background:var(--pink);color:#fff;padding:12px 24px;border-radius:16px;cursor:pointer;box-shadow:0 5px 0 var(--ink);transition:transform .1s}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+.btn.alt{background:var(--sky)}.btn.g{background:var(--mint);color:var(--ink)}
+input,select{font:inherit;font-size:1.05rem;padding:10px 12px;border:3px solid var(--ink);border-radius:12px;background:#fff;color:var(--ink);width:100%}
+label{font-weight:600;display:block;margin:12px 0 4px}
+.hero{text-align:center}.mascot{font-size:4rem;display:inline-block;animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-12px) rotate(6deg)}}
+.pills{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:12px 0}
+.pill{background:var(--yel);border:3px solid var(--ink);border-radius:999px;padding:4px 12px;font-weight:600}
+.nb{background:#fff;border:3px solid var(--ink);border-left-width:12px;border-radius:14px;padding:10px 14px;margin:10px 0}
+.nb.p{border-left-color:var(--pink)}.nb.s{border-left-color:var(--sky)}.nb.m{border-left-color:var(--mint)}.nb.y{border-left-color:var(--yel)}
+.nb b{color:var(--pink)}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;font-size:.95rem}
+td,th{border:2px solid var(--ink);padding:6px 8px;text-align:left}th{background:var(--yel)}
+.wrap{overflow-x:auto}
+.bar{height:16px;background:#fff;border:3px solid var(--ink);border-radius:99px;overflow:hidden;margin:8px 0 14px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--pink),var(--yel));transition:width .3s}
+.hud{display:flex;justify-content:space-between;font-weight:700;flex-wrap:wrap;gap:6px}
+.q{margin:14px 0;padding:12px;background:#fff;border:3px solid var(--ink);border-radius:16px}
+.q p{margin:0 0 8px;font-weight:600}
+.opt{display:block;width:100%;text-align:left;font:inherit;margin:6px 0;padding:10px 12px;border:3px solid var(--ink);border-radius:12px;background:#fff;color:var(--ink);cursor:pointer}
+.opt:hover{background:#fff3c4}.opt.sel{background:var(--sky);color:#fff}
+.opt.ok{background:var(--mint)}.opt.no{background:var(--bad);color:#fff}
+.row{display:grid;grid-template-columns:1fr 2fr;gap:10px;align-items:center;margin:8px 0}
+.fb{font-weight:600;margin-top:8px}
+.medal{font-size:7rem;animation:bob 1.4s ease-in-out infinite}
+.score{font-size:3rem;font-weight:700;color:var(--pink)}
+.rain{position:fixed;top:-40px;font-size:2rem;animation:fall linear forwards;pointer-events:none;z-index:9}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+@media(max-width:560px){.row{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style></head><body><div id="app"></div>
+<script>
+const MCQ=[
+["Which definition of ML comes from Alpaydin?",["Writing rules for every case by hand","Programming computers to optimize a performance criterion using example data or past experience","Storing data in large databases","Building faster hardware"],1],
+["In Mitchell's definition, what does 'E' stand for?",["Error","Equation","Experience","Evaluation"],2],
+["A spam filter that improves as it sees more labelled emails satisfies Mitchell's definition when…",["its code gets longer","its measured performance improves with experience","it uses more memory","it blocks all emails"],1],
+["Which problem is BEST suited to ML rather than hand-written rules?",["Checking if marks ≥ 40","Converting km to miles","Recognising faces","Adding two numbers"],2],
+["Traditional programming takes…",["Data + Program → Output","Data + Output → Program","Only output","Only a model"],0],
+["Machine Learning takes data and expected results and produces…",["A bigger dataset","A model","A compiler","A database"],1],
+["Which step turns raw text into numbers for an algorithm?",["Prediction","Data preparation / feature extraction","Testing","Deployment"],1],
+["Why do we test a model on emails NOT used for training?",["To save time","To check how well it handles unseen data","To make training longer","To delete old data"],1],
+["'Customers who buy bread also buy butter' is an example of…",["Regression","Classification","Association learning","Reinforcement learning"],2],
+["Predicting the price of a 1,300 sq. ft. house is…",["Classification","Clustering","Regression","Association"],2],
+["Grouping customers with NO predefined labels is…",["Supervised learning","Unsupervised learning","Regression","Rule-based programming"],1],
+["A robot learns to walk using rewards and penalties. This is…",["Reinforcement learning","Classification","Association","Regression"],0],
+["In Mitchell's checkers system, which module turns game history into training examples?",["Performance System","Critic","Generalizer","Experiment Generator"],1],
+["Data Mining is best described as…",["A type of hardware","Discovering useful patterns from large collections of data","Only a part of traditional programming","Deleting duplicate data"],1],
+["Which is a limitation of ML?",["It never needs data","It cannot analyse large data","Biased training data can give unfair predictions","It always gives correct answers"],2]];
+const PRAC=[
+["What is the output type of classification?",["A category","A continuous number","A reward","A cluster centre"],0,"Classification = Category!"],
+["Regression predicts…",["Groups","Numerical values","Rewards","Rules"],1,"Regression = Number!"],
+["Which uses labelled data?",["Supervised learning","Clustering","Both equally","Neither"],0,"Supervised learning learns from labelled examples."],
+["The learner in reinforcement learning is the…",["Agent","Critic","Dataset","Label"],0,"Agent acts in an environment and gets rewards."],
+["Which module picks new games to practise in the checkers system?",["Critic","Experiment Generator","Generalizer","Performance System"],1,"It proposes new problems to explore."],
+["An algorithm vs a model: the model is…",["The procedure","The result of applying the procedure to data","The dataset","The label"],1,"Algorithm = procedure, model = result."],
+["Which is NOT a field that contributes to ML?",["Statistics","Control theory","Probability","Pottery glazing"],2,"ML is interdisciplinary, but not that interdisciplinary!"],
+["Overfitting means the model…",["Memorises training examples","Is too small","Has no data","Uses rewards"],0,"It memorises instead of generalising."]];
+const MATCH=[
+{t:"Round 1 – Data Vocabulary",p:[["Dataset","Collection of data"],["Instance","One data record"],["Feature","A characteristic of the data"],["Label","The correct output"],["Model","Result of applying a learning algorithm to data"]]},
+{t:"Round 2 – Learning Types",p:[["Classification","Predicts a category"],["Regression","Predicts a numerical value"],["Clustering","Groups similar unlabelled data"],["Association","Finds items bought together"],["Reinforcement","Learns from rewards and penalties"]]},
+{t:"Round 3 – Systems & Concepts",p:[["Performance System","Plays the game using learned knowledge"],["Critic","Produces training examples from game history"],["Generalizer","Learns a hypothesis from training examples"],["Experiment Generator","Proposes new problems to practise"],["Data Mining","Discovering useful knowledge in large data"]]}];
+const FILL=[
+["In Mitchell's T, E, P, the P stands for ___ .",["performance"]],
+["Predicting a continuous number is called ___ .",["regression"]],
+["Learning from data that has no labels is ___ learning.",["unsupervised"]],
+["In reinforcement learning, the learner or decision-maker is the ___ .",["agent"]],
+["Bread → Butter is an example of ___ learning.",["association"]],
+["When a model memorises training data instead of learning general patterns it is ___ .",["overfitting","over-fitting"]],
+["Deciding Spam or Genuine is a ___ problem.",["classification"]],
+["Text is converted into a ___ representation so algorithms can process it.",["numerical","numeric"]],
+["The correct output attached to a training example is called a ___ .",["label"]],
+["The procedure used to learn is the ___ ; the model is its result.",["algorithm"]]];
+const NOTES=[
+["p","What is ML?","Alpaydin: programming computers to <b>optimize a performance criterion using example data or past experience</b>. Models can be predictive, descriptive or both."],
+["s","Mitchell's T + E + P","A program learns from experience <b>E</b> on tasks <b>T</b> with performance measure <b>P</b> if its performance at T, as measured by P, improves with E. Chess: T = playing, E = many games, P = % won."],
+["m","Why ML?","Expertise hard to express as rules (faces) · huge data (fraud) · changing environments (traffic)."],
+["y","Traditional vs ML","Traditional: <b>Data + Program → Output</b>. ML: <b>Data + Expected results → Learning algorithm → Model</b>."],
+["p","ML workflow","Collect data → prepare → extract features → train → test on unseen data → predict. Algorithm = procedure; model = result."],
+["s","Five application areas","<b>Association</b> (relationships, P(Y|X)) · <b>Classification</b> (category) · <b>Regression</b> (number) · <b>Unsupervised</b> (hidden groups) · <b>Reinforcement</b> (rewards)."],
+["m","Mitchell's checkers system","<b>Performance System</b> plays · <b>Critic</b> makes training examples · <b>Generalizer</b> learns a hypothesis · <b>Experiment Generator</b> proposes new problems."],
+["y","Data Mining & interdisciplinary ML","Data mining finds useful knowledge in large data; ML is one of its techniques. ML draws on CS, statistics, maths, AI, probability, biology, psychology, control theory and information theory."],
+["p","Limitations","Data dependency · bias · computing cost · overfitting · interpretability · privacy · wrong predictions. ML is powerful, not magic!"]];
+const $=s=>document.querySelector(s),app=$('#app');
+let st={page:'reg',name:'',cls:'',mcq:Array(15).fill(null),mt:MATCH.map(r=>Array(5).fill('')),fill:Array(10).fill(''),sec:0,res:null},pr={i:0,xp:0,done:false,ans:null};
+const sh=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const nav=()=>{const ok=!!st.name,a=st.page;const b=(p,l,d)=>`<button class="${a==p?'on':''}" ${d?'disabled':''} onclick="go('${p}')">${l}</button>`;return `<nav>${b('reg','🏠 Home')}${b('notes','📚 Notes',!ok)}${b('practice','🎯 Practice',!ok)}${b('assess','🏆 Assessment',!ok)}${b('result','🎖️ Result',!st.res)}</nav>`};
+function go(p){st.page=p;if(p=='practice'&&pr.done)pr={i:0,xp:0,done:false,ans:null};draw();window.scrollTo(0,0)}
+function draw(){app.innerHTML=nav()+({reg,notes,practice,assess,result}[st.page])();}
+function reg(){return `<div class="card hero"><div class="mascot">🤖</div><h1>ML Quest</h1><p style="font-size:1.15rem">Unit I · Introduction to Machine Learning<br>M.Sc. IT · Semester IV · P25IT411</p>
+<div class="pills"><span class="pill">📚 Notes</span><span class="pill">🎯 Practice</span><span class="pill">🏆 40-point Challenge</span></div>
+<div style="max-width:380px;margin:0 auto;text-align:left"><label>Player name</label><input id="nm" value="${st.name}" placeholder="e.g. Priya" maxlength="30">
+<label>Class / Roll no.</label><input id="cl" value="${st.cls}" placeholder="e.g. MSc IT – 21" maxlength="30"></div>
+<p><button class="btn" onclick="start()">Start the adventure 🚀</button></p>
+<p style="font-size:.95rem">🥇 35+ Gold · 🥈 25+ Silver · 🥉 20+ Bronze · 🎗️ below 20 Participation</p></div>`}
+function start(){const n=$('#nm').value.trim();if(!n){$('#nm').style.borderColor='#ff5c5c';$('#nm').placeholder='Please enter your name!';return}st.name=n;st.cls=$('#cl').value.trim();go('notes')}
+function notes(){return `<div class="card"><h2>📚 Study Notes, ${esc(st.name)}!</h2><p>Read these power-ups, then try Practice.</p>${NOTES.map(n=>`<div class="nb ${n[0]}"><b>${n[1]}</b><br>${n[2]}</div>`).join('')}
+<h3>Quick compare</h3><div class="wrap"><table><tr><th>Type</th><th>Learns</th><th>Example</th></tr><tr><td>Association</td><td>Relationships</td><td>Bread → Butter</td></tr><tr><td>Classification</td><td>Categories</td><td>Spam detection</td></tr><tr><td>Regression</td><td>Numbers</td><td>House price</td></tr><tr><td>Unsupervised</td><td>Hidden patterns</td><td>Customer groups</td></tr><tr><td>Reinforcement</td><td>Better actions</td><td>Robot navigation</td></tr></table></div>
+<p style="text-align:center"><button class="btn alt" onclick="go('practice')">Go to Practice 🎯</button></p></div>`}
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function practice(){if(pr.done)return `<div class="card hero"><div class="mascot">⭐</div><h2>Practice complete!</h2><p class="score">${pr.xp} / ${PRAC.length*10} XP</p><p>${pr.xp>=60?'You are ready for the real challenge!':'Revisit the notes and try again.'}</p><button class="btn alt" onclick="go('notes')">Review notes</button> <button class="btn" onclick="pr={i:0,xp:0,done:false,ans:null};draw()">Replay</button> <button class="btn g" onclick="go('assess')">Take assessment</button></div>`;
+const q=PRAC[pr.i];return `<div class="card"><div class="hud"><span>🎯 Practice ${pr.i+1}/${PRAC.length}</span><span>⭐ ${pr.xp} XP</span></div><div class="bar"><i style="width:${pr.i/PRAC.length*100}%"></i></div><div class="q"><p>${q[0]}</p>${q[1].map((o,i)=>`<button class="opt ${pr.ans!==null?(i==q[2]?'ok':i==pr.ans?'no':''):''}" ${pr.ans!==null?'disabled':''} onclick="pa(${i})">${o}</button>`).join('')}
+${pr.ans!==null?`<div class="fb">${pr.ans==q[2]?'🎉 Correct! +10 XP':'💡 Not quite.'} ${q[3]}</div><p><button class="btn g" onclick="pn()">${pr.i==PRAC.length-1?'Finish':'Next'} ▶</button></p>`:''}</div></div>`}
+function pa(i){pr.ans=i;if(i==PRAC[pr.i][2])pr.xp+=10;draw()}
+function pn(){pr.ans=null;pr.i++;if(pr.i>=PRAC.length)pr.done=true;draw()}
+const SECN=["🧠 Level 1 · Multiple Choice (15)","🧩 Level 2 · Match the Pairs (15)","✍️ Level 3 · Fill in the Blanks (10)"];
+function assess(){const s=st.sec;let h=`<div class="card"><div class="hud"><span>${SECN[s]}</span><span>Total: 40 pts</span></div><div class="bar"><i style="width:${(s+1)/3*100}%"></i></div>`;
+if(s==0)h+=MCQ.map((q,i)=>`<div class="q"><p>${i+1}. ${q[0]}</p>${q[1].map((o,j)=>`<button class="opt ${st.mcq[i]===j?'sel':''}" onclick="st.mcq[${i}]=${j};keep(()=>draw())">${o}</button>`).join('')}</div>`).join('');
+if(s==1)h+=MATCH.map((r,ri)=>{const opts=r.opt||(r.opt=sh(r.p.map(x=>x[1])));return `<h3>${r.t}</h3>`+r.p.map((p,pi)=>`<div class="row"><b>${ri*5+pi+1}. ${p[0]}</b><select onchange="st.mt[${ri}][${pi}]=this.value"><option value="">— choose —</option>${opts.map(o=>`<option ${st.mt[ri][pi]==o?'selected':''}>${o}</option>`).join('')}</select></div>`).join('')}).join('');
+if(s==2)h+=FILL.map((q,i)=>`<div class="q"><p>${i+1}. ${q[0]}</p><input value="${esc(st.fill[i])}" oninput="st.fill[${i}]=this.value" placeholder="type your answer" autocomplete="off"></div>`).join('');
+h+=`<p style="text-align:center">${s>0?'<button class="btn alt" onclick="st.sec--;draw();window.scrollTo(0,0)">◀ Back</button> ':''}${s<2?`<button class="btn" onclick="st.sec++;draw();window.scrollTo(0,0)">Next level ▶</button>`:`<button class="btn g" onclick="submit()">Submit & see medal 🏅</button>`}</p></div>`;return h}
+function keep(f){const y=scrollY;f();scrollTo(0,y)}
+function submit(){const un=st.mcq.filter(x=>x===null).length+st.mt.flat().filter(x=>!x).length+st.fill.filter(x=>!x.trim()).length;
+if(un&&!confirm(`${un} question(s) are unanswered. Submit anyway?`))return;
+const m=st.mcq.reduce((a,x,i)=>a+(x===MCQ[i][2]?1:0),0);
+const mt=MATCH.reduce((a,r,ri)=>a+r.p.reduce((b,p,pi)=>b+(st.mt[ri][pi]==p[1]?1:0),0),0);
+const f=st.fill.reduce((a,x,i)=>a+(FILL[i][1].includes(x.trim().toLowerCase())?1:0),0);
+st.res={m,mt,f,t:m+mt+f};go('result');if(st.res.t>=20)rain(st.res.t>=35?'🥇':st.res.t>=25?'🥈':'🥉')}
+function rain(e){for(let i=0;i<24;i++){const d=document.createElement('div');d.className='rain';d.textContent=['🎉','⭐',e,'🎈'][i%4];d.style.left=Math.random()*100+'vw';d.style.animationDuration=2+Math.random()*2+'s';document.body.appendChild(d);setTimeout(()=>d.remove(),4500)}}
+function result(){const r=st.res,t=r.t;const M=t>=35?['🥇','Gold Medal','You are an ML Grandmaster!']:t>=25?['🥈','Silver Medal','Brilliant work, nearly at the top!']:t>=20?['🥉','Bronze Medal','Solid effort — you cleared the bar!']:['🎗️','Participation Medal','Every great model starts with training. Try again!'];
+const rev=`<h3>Answer review</h3><div class="wrap"><table><tr><th>Section</th><th>Score</th></tr><tr><td>Multiple choice</td><td>${r.m} / 15</td></tr><tr><td>Match the pairs</td><td>${r.mt} / 15</td></tr><tr><td>Fill in the blanks</td><td>${r.f} / 10</td></tr></table></div>
+<h3>Fill-in-the-blank answers</h3>${FILL.map((q,i)=>{const ok=q[1].includes(st.fill[i].trim().toLowerCase());return `<div class="nb ${ok?'m':'p'}">${i+1}. ${ok?'✅':'❌'} Correct: <b>${q[1][0]}</b>${ok?'':` (you wrote: ${esc(st.fill[i])||'—'})`}</div>`}).join('')}
+<h3>MCQs you missed</h3>${MCQ.map((q,i)=>st.mcq[i]===q[2]?'':`<div class="nb s">${i+1}. ${q[0]}<br>Answer: <b>${q[1][q[2]]}</b></div>`).join('')||'<p>None — perfect! 🌟</p>'}`;
+return `<div class="card hero"><div class="medal">${M[0]}</div><h2>${M[1]}</h2><p style="font-size:1.2rem">${esc(st.name)}${st.cls?' · '+esc(st.cls):''}</p><p class="score">${t} / 40</p><p>${M[2]}</p>
+<div class="pills"><span class="pill">🥇 35+</span><span class="pill">🥈 25+</span><span class="pill">🥉 20+</span><span class="pill">🎗️ below 20</span></div>
+<p><button class="btn" onclick="retry()">Play again 🔁</button> <button class="btn alt" onclick="go('notes')">Study notes</button></p><div style="text-align:left">${rev}</div></div>`}
+function retry(){st.mcq=Array(15).fill(null);st.mt=MATCH.map(r=>{delete r.opt;return Array(5).fill('')});st.fill=Array(10).fill('');st.sec=0;st.res=null;go('assess')}
+draw();
+</script></body></html>
